@@ -53,7 +53,7 @@ for (key in schemas) {
         fs.writeFileSync(path.join(buildPath, `models/${modelName}.js`), modelContent);
 
         // Creating Routes
-        fs.appendFileSync(path.join(tempPath, 'app-routes.src'), `\napp.use('/${schema[0]}', require('./routes/${schema[0]}'))\n`);
+        fs.appendFileSync(path.join(tempPath, 'app-routes.src'), `app.use('/${schema[0]}', require('./routes/${schema[0]}'))\n`);
         fs.writeFileSync(path.join(routesPath, `${schema[0]}.js`), `const express = require('express');\nconst router = express.Router();\n\n// Controllers\nconst ${schema[0]}Controller = require('../controller/${schema[0]}.js');\n\nrouter.delete('/delete/:id', ${schema[0]}Controller.delete);\nrouter.patch('/update/:id', ${schema[0]}Controller.update);\nrouter.post('/save', ${schema[0]}Controller.save);\nrouter.get('/get', ${schema[0]}Controller.get);\n\nmodule.exports = router;`);
         
         // Creating Controller
