@@ -1,5 +1,12 @@
 # NodeJS API Generator
 
-This NodeJS Project is used to create basic **CRUD** for all the schemas defined in the *schemas* folder.
+This NodeJS Project is used to create basic **CRUD** for all the schemas *(Mongoose Schema)* defined in the *schemas* directory.
 
-`Note: Here schema is nothing but mongoose schema`
+#### Note: Define your own schema inside *schemas directory* with extenstion *.schema*
+
+
+## Usage
+```
+1. git clone https://github.com/rupinder-developer/NodeJS-API-Generator.git
+2. npm run-script build
+```
