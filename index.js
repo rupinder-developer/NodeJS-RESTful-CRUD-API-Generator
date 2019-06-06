@@ -1,3 +1,4 @@
+const exec = require('child_process').exec;
 const ucfirst = require('ucfirst');
 const rimraf = require("rimraf");
 const path = require('path');
@@ -9,6 +10,8 @@ const modelsPath = path.join(__dirname, 'build/models');
 const routesPath = path.join(__dirname, 'build/routes');
 const controllerPath = path.join(__dirname, 'build/controller');
 const tempPath = path.join(buildPath, 'temp');
+
+console.log('Generating API...')
 
 if (!fs.existsSync(buildPath)) {
     fs.mkdirSync(buildPath);
@@ -52,7 +55,7 @@ for (key in schemas) {
         fs.writeFileSync(path.join(routesPath, `${schema[0]}.js`), `const express = require('express');\nconst router = express.Router();\n\n// Controllers\nconst ${schema[0]}Controller = require('../controller/${schema[0]}.js');\n\nrouter.delete('/delete', ${schema[0]}Controller.delete);\nrouter.patch('/update', ${schema[0]}Controller.update);\nrouter.post('/save', ${schema[0]}Controller.save);\nrouter.get('/get', ${schema[0]}Controller.get);\n\nmodule.exports = router;`);
         
         // Creating Controller
-        fs.writeFileSync(path.join(controllerPath, `${schema[0]}.js`), 'This is Controller');
+        fs.writeFileSync(path.join(controllerPath, `${schema[0]}.js`), `const ${modelName} = require('../models/${modelName}');\n\nexports.delete = (req, res, next) => { }\nexports.patch = (req, res, next) => { }\nexports.save = (req, res, next) => { }\nexports.get = (req, res, next) => { }`);
     }
 }
 
@@ -60,3 +63,12 @@ const appErrorHandling = fs.readFileSync(path.join(__dirname, 'app/src/app-error
 appRoutes = fs.readFileSync(path.join(tempPath, 'app-routes.src'), 'utf8');
 fs.writeFileSync(path.join(buildPath, 'app.js'), appRoutes.concat(appErrorHandling));
 rimraf.sync(tempPath);
+
+// executes `cd build && npm init -y && npm install --save express body-parser mongoose`
+exec('cd build && npm init -y && npm install --save express body-parser mongoose', function (error, stdout, stderr) {
+    if (error !== null) {
+      console.log('Build Failed!!, Try again with administrator rights');
+    } else {
+        console.log(`API Generated Successfully, Location: ${buildPath}`)
+    }
+});
