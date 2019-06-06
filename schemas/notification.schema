@@ -1,0 +1,22 @@
+{
+    title: {
+        type: String,
+        required: [true, 'Notification Title is required!']
+    },
+    description: {
+        type: String,
+        required: [true, 'Notification Description is required!']
+    },
+    notificationFor: {
+        type: String,
+        enum: ['all', 'registered'],
+        required: [true, 'Notification for is required']
+    },
+    member: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Member'
+    }
+}, {
+    timestamps: true
+}

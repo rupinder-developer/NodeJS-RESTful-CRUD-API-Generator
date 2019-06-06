@@ -10,5 +10,9 @@
     "APIGenerator"
   ],
   "author": "Rupinder Singh",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "rimraf": "^2.6.3",
+    "ucfirst": "^1.0.0"
+  }
 }
