@@ -1,4 +1,4 @@
-# NodeJS API Generator
+# NodeJS RESTful CRUD API Generator
 
 This NodeJS Project is used to create basic **CRUD** for all the schemas *(Mongoose Schema)* defined in the *schemas* directory.
 
