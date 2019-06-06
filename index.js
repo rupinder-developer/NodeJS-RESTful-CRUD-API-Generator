@@ -4,6 +4,8 @@ const rimraf = require("rimraf");
 const path = require('path');
 const fs = require('fs');
 
+require(path.join(__dirname, 'app/required-functions'));
+
 const schemasPath = path.join(__dirname, 'schemas');
 const buildPath = path.join(__dirname, 'build');
 const modelsPath = path.join(__dirname, 'build/models');
@@ -52,10 +54,15 @@ for (key in schemas) {
 
         // Creating Routes
         fs.appendFileSync(path.join(tempPath, 'app-routes.src'), `\napp.use('/${schema[0]}', require('./routes/${schema[0]}'))\n`);
-        fs.writeFileSync(path.join(routesPath, `${schema[0]}.js`), `const express = require('express');\nconst router = express.Router();\n\n// Controllers\nconst ${schema[0]}Controller = require('../controller/${schema[0]}.js');\n\nrouter.delete('/delete', ${schema[0]}Controller.delete);\nrouter.patch('/update', ${schema[0]}Controller.update);\nrouter.post('/save', ${schema[0]}Controller.save);\nrouter.get('/get', ${schema[0]}Controller.get);\n\nmodule.exports = router;`);
+        fs.writeFileSync(path.join(routesPath, `${schema[0]}.js`), `const express = require('express');\nconst router = express.Router();\n\n// Controllers\nconst ${schema[0]}Controller = require('../controller/${schema[0]}.js');\n\nrouter.delete('/delete/:id', ${schema[0]}Controller.delete);\nrouter.patch('/update/:id', ${schema[0]}Controller.update);\nrouter.post('/save', ${schema[0]}Controller.save);\nrouter.get('/get', ${schema[0]}Controller.get);\n\nmodule.exports = router;`);
         
         // Creating Controller
-        fs.writeFileSync(path.join(controllerPath, `${schema[0]}.js`), `const ${modelName} = require('../models/${modelName}');\n\nexports.delete = (req, res, next) => { }\nexports.patch = (req, res, next) => { }\nexports.save = (req, res, next) => { }\nexports.get = (req, res, next) => { }`);
+        const patchController = patchControllerFunc(modelName);
+        const deleteController = deleteControllerFunc(modelName);
+        const saveController = saveControllerFunc(modelName, schema[0]);
+        const getController = getControllerFunc(modelName);
+        
+        fs.writeFileSync(path.join(controllerPath, `${schema[0]}.js`), `const ${modelName} = require('../models/${modelName}');\n\nexports.delete = (req, res, next) => {${deleteController}\n}\n\nexports.patch = (req, res, next) => {${patchController}\n}\n\nexports.save = (req, res, next) => {${saveController}\n}\n\nexports.get = (req, res, next) => {${getController}\n}`);
     }
 }
 
@@ -69,6 +76,7 @@ exec('cd build && npm init -y && npm install --save express body-parser mongoose
     if (error !== null) {
       console.log('Build Failed!!, Try again with administrator rights');
     } else {
-        console.log(`API Generated Successfully, Location: ${buildPath}`)
+        console.log(`API Generated Successfully, Location: ${buildPath}`);
+        fs.writeFileSync(path.join(buildPath, '.gitignore'), '/node_module');
     }
 });
