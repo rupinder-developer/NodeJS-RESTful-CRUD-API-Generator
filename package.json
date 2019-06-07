@@ -1,5 +1,5 @@
 {
-  "name": "nodejs_api_generator",
+  "name": "api_scaffold_generator",
   "version": "1.0.0",
   "description": "NodeJS API Generator",
   "main": "index.js",
