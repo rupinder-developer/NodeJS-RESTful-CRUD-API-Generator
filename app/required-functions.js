@@ -1,11 +1,6 @@
 patchControllerFunc = (modelName) => {
     return `
-    const newValues = {
-        $set: {
-            key: "value"
-        }
-    }
-    ${modelName}.updateOne({_id: req.pramas.id}, newValues).then(result => {
+    ${modelName}.updateOne({_id: req.pramas.id}, req.body).then(result => {
         if (result.nModified > 0) {
             res.status(201).json({
                 response: true,
